@@ -1,0 +1,560 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", "Calibri", "Arial", sans-serif;
+    background: #f2f1ed;
+    color: #1c1b19;
+    padding: 30px 20px 40px;
+}
+
+.sheet {
+    max-width: 980px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 28px 32px 36px;
+    border: 1px solid #c9c9c9;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.sheet-header {
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    letter-spacing: 0.04em;
+    color: #202020;
+}
+
+.shift-toggle {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    place-items: center;
+    min-width: 104px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #c9c9c9;
+    border-radius: 10px;
+    background: #fff;
+    color: #202020;
+    font: 600 1.1rem "Segoe UI", Arial, sans-serif;
+    letter-spacing: 0;
+    text-decoration: none;
+}
+
+.shift-toggle:hover { background: #f2f1ed; }
+
+.logo {
+    display: none;
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 96px;
+    height: 96px;
+    pointer-events: none;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.floating-error {
+    position: absolute;
+    top: 200px;
+    right: 120px;
+    max-width: 230px;
+    padding: 6px 10px;
+    border: 1px solid #c33;
+    background: #fff3f3;
+    color: #a10d0d;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: right;
+    border-radius: 4px;
+}
+
+.floating-error:empty {
+    display: none;
+}
+
+.top-line {
+    margin: 0;
+    font-size: 1rem;
+    letter-spacing: 0.18em;
+    color: #1a1a1a;
+}
+
+.sheet-header h1 {
+    margin: 6px 0 2px;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.sub-line {
+    margin: 0;
+    font-size: 1rem;
+    color: #3c3c3c;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    font-size: 0.98rem;
+}
+
+th,
+td {
+    border: 1px solid #adadad;
+    padding: 6px 8px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    background: #f8f7f4;
+    text-transform: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+thead tr:nth-child(2) th {
+    font-size: 0.85rem;
+}
+
+.attendance-table tbody tr:nth-child(odd) td,
+.elective-table tbody tr:nth-child(odd) td {
+    background: #fffdf9;
+}
+
+.attendance-table tbody tr:nth-child(even) td,
+.elective-table tbody tr:nth-child(even) td {
+    background: #f5f4ef;
+}
+
+tfoot td {
+    background: #f0eeeb;
+    font-weight: 600;
+}
+
+.attendance-table thead th,
+.elective-table thead th {
+    border-bottom: 2px solid #949494;
+}
+
+.number-input {
+    width: 80px;
+    padding: 5px 4px;
+    border: 1px solid #b0b0b0;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 0.95rem;
+    background: #fff;
+}
+
+.spinner-input {
+    width: 60px;
+    padding: 5px 3px;
+    border: 1px solid #a3a3a3;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 0.95rem;
+    background: #faf9f6;
+}
+
+.spinner-input::-webkit-outer-spin-button,
+.spinner-input::-webkit-inner-spin-button {
+    opacity: 0.8;
+}
+
+.spinner-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.name-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #9c9895;
+    background: transparent;
+    font-size: 0.95rem;
+    padding: 4px 2px;
+    text-align: left;
+}
+
+/* Multiple selected student names remain visible and increase the row height. */
+.attendance-table td:has(.name-multiselect) {
+    vertical-align: top;
+}
+
+.name-multiselect {
+    position: relative;
+    min-width: 120px;
+    text-align: left;
+}
+
+.name-multiselect__toggle {
+    width: 100%;
+    min-height: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 2px;
+    border: 0;
+    border-bottom: 1px solid #9c9895;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.name-multiselect__value {
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+}
+
+.name-multiselect__menu {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + 3px);
+    left: 0;
+    width: max-content;
+    min-width: 100%;
+    padding: 5px;
+    border: 1px solid #9c9895;
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .18);
+}
+
+.name-multiselect.is-open .name-multiselect__menu {
+    display: grid;
+    gap: 4px;
+}
+
+.name-multiselect__option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.name-multiselect__option:hover {
+    background: #f0eeeb;
+}
+
+.name-multiselect__empty {
+    display: block;
+    padding: 5px;
+    color: #666;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.name-input:focus,
+.number-input:focus,
+.spinner-input:focus,
+.total-input:focus {
+    outline: none;
+    border-color: #4a6fa0;
+    box-shadow: 0 0 0 2px rgba(74, 111, 160, 0.15);
+}
+
+.total-input {
+    width: 85px;
+    padding: 4px 5px;
+    border: 1px solid #b0b0b0;
+    border-radius: 2px;
+    background: #fffefc;
+    text-align: center;
+}
+
+.present-cell,
+.spinner-cell {
+    position: relative;
+}
+
+.cell-error {
+    position: absolute;
+    top: -18px;
+    right: 0;
+    font-size: 0.7rem;
+    color: #b22828;
+    font-weight: 600;
+    line-height: 1;
+    background: #fffdf9;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: 1px solid #ea7b8f;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+}
+
+.cell-error:empty {
+    display: none;
+}
+
+.invalid {
+    border-color: #d33;
+    background: #fff4f4;
+}
+
+.error-note {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.7rem;
+    color: #b22828;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.elective-section {
+    margin-top: -8px;
+    position: relative;
+}
+
+.late-students-section {
+    margin-top: 18px;
+}
+
+.late-students-label {
+    margin: 0 0 5px;
+    font-size: 0.9rem;
+}
+
+.late-students-table {
+    margin-bottom: 0;
+    font-size: 0.98rem;
+}
+
+.late-students-table caption {
+    caption-side: top;
+    padding: 3px 0;
+    font-weight: 600;
+}
+
+.late-students-table th,
+.late-students-table td {
+    padding: 6px 8px;
+}
+
+.late-students-table th {
+    font-size: 0.95rem;
+}
+
+.late-students-table th:nth-child(1) { width: 4%; }
+.late-students-table th:nth-child(2) { width: 11%; }
+.late-students-table th:nth-child(3) { width: 22%; }
+.late-students-table th:nth-child(4) { width: 19%; }
+.late-students-table th:nth-child(5) { width: 25%; }
+.late-students-table th:nth-child(6) { width: 19%; }
+
+.late-students-table input,
+.late-students-table select {
+    width: 100%;
+    min-width: 0;
+    padding: 4px 2px;
+    border: 0;
+    border-bottom: 1px solid #9c9895;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+}
+
+.late-students-table input:focus,
+.late-students-table select:focus {
+    outline: 1px solid #4a6fa0;
+    background: #fff;
+}
+
+.late-students-table select:disabled {
+    color: #777;
+}
+
+.duty-teacher-notes {
+    margin-top: 18px;
+    break-inside: avoid;
+}
+
+.duty-teacher-notes label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.duty-teacher-notes textarea {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    padding: 8px;
+    border: 1px solid #9c9895;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    resize: vertical;
+}
+
+/* Checkbox dropdown used to select several late students in one row. */
+.late-students-table .name-multiselect {
+    min-width: 0;
+}
+
+.late-students-table .name-multiselect__toggle {
+    min-height: 25px;
+    padding: 4px 2px;
+}
+
+.late-students-table .name-multiselect__option input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    border: 0;
+    appearance: auto;
+}
+
+.elective-floating-error {
+    position: absolute;
+    top: 10px;
+    right: 60px;
+    max-width: 210px;
+    padding: 6px 10px;
+    border: 1px solid #c33;
+    background: #fff3f3;
+    color: #a10d0d;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: right;
+    border-radius: 4px;
+}
+
+.elective-floating-error:empty {
+    display: none;
+}
+
+.table-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.total-label {
+    text-align: left;
+    font-weight: 600;
+}
+
+.name-total {
+    min-width: 145px;
+    text-align: left;
+    vertical-align: top;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-weight: 400;
+}
+
+@media (max-width: 720px) {
+    body {
+        padding: 16px;
+    }
+
+    .sheet {
+        padding: 18px 16px 24px;
+    }
+
+    .number-input,
+    .total-input {
+        width: 100%;
+    }
+
+    th,
+    td {
+        font-size: 0.85rem;
+    }
+}
+/* Toolbar үндсэндээ нуутай */
+.export-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.toolbar-btn{
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toolbar-btn:hover{
+  filter: brightness(0.95);
+}
+
+/* Print / PDF үед toolbar харагдахгүй */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+
+  body {
+    padding: 0;
+    background: #fff;
+  }
+
+  .sheet {
+    max-width: none;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .export-toolbar {
+    display: none !important;
+  }
+
+  .floating-error,
+  .elective-floating-error {
+    display: none !important;
+  }
+
+  table {
+    font-size: 9pt;
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    break-inside: avoid;
+  }
+
+  input,
+  select,
+  .name-multiselect__toggle {
+    border: 0 !important;
+    background: transparent !important;
+    color: inherit !important;
+    appearance: none;
+    padding: 0 !important;
+  }
+
+  .name-multiselect__menu {
+    display: none !important;
+  }
+}
+body.admin { border-top: 6px solid #2b6cb0; }

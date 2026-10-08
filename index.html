@@ -1,0 +1,433 @@
+﻿<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026-2027 оны хичээлийн жилийн сурагчдын ирцийн тэмдэглэл</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<!-- Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<!-- PDF -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.28/dist/jspdf.plugin.autotable.min.js"></script>
+
+<body>
+    <div class="sheet">
+        <div class="logo">
+            <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%25%22%20x2%3D%220%25%22%20y1%3D%220%25%22%20y2%3D%22100%25%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23a8d8ff%22%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%2260%25%22%20stop-color%3D%22%230073c8%22%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2298%22%20fill%3D%22%23fbe600%22%20stroke%3D%22%23062f62%22%20stroke-width%3D%226%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%22100%22%20cy%3D%22100%22%20r%3D%2278%22%20fill%3D%22url(%23bg)%22%20%2F%3E%0A%20%20%3Cpath%20d%3D%22M40%20130%20L60%2070%20L80%20110%20L100%2080%20L120%20110%20L140%2070%20L160%20130%22%20stroke%3D%22%23fff%22%20stroke-width%3D%228%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M60%20120%20L100%20105%20L140%20120%22%20stroke%3D%22%23fff%22%20stroke-width%3D%224%22%20fill%3D%22none%22%2F%3E%0A%20%20%3Ctext%20x%3D%22100%22%20y%3D%2248%22%20font-size%3D%2218%22%20text-anchor%3D%22middle%22%20fill%3D%22%23062f62%22%20font-weight%3D%22700%22%3E%D0%95%D1%80%D3%A9%D0%BD%D1%85%D0%B8%D0%B9%3C%2Ftext%3E%0A%20%20%3Ctext%20x%3D%22100%22%20y%3D%2268%22%20font-size%3D%2216%22%20text-anchor%3D%22middle%22%20fill%3D%22%23062f62%22%3E%D0%B1%D0%BE%D0%BB%D0%BE%D0%B2%D1%81%D1%80%D0%BE%D0%BB%D1%8B%D0%BD%3C%2Ftext%3E%0A%20%20%3Ctext%20x%3D%22100%22%20y%3D%22182%22%20font-size%3D%2216%22%20text-anchor%3D%22middle%22%20fill%3D%22%23062f62%22%3EI-%D1%80%20%D1%81%D1%83%D1%80%D0%B3%D1%83%D1%83%D0%BB%D1%8C%3C%2Ftext%3E%0A%20%20%3Ctext%20x%3D%22100%22%20y%3D%22198%22%20font-size%3D%2214%22%20text-anchor%3D%22middle%22%20fill%3D%22%23062f62%22%3E1974%3C%2Ftext%3E%0A%3C%2Fsvg%3E" alt="Ирцийн тэмдэглэл">
+            
+
+        </div>
+        <header class="sheet-header">
+            <a class="shift-toggle" href="index2.html" aria-label="2-р ээлж рүү шилжих">2-р ээлж</a>
+            <!-- 🔐 ADMIN TOOLBAR -->
+
+
+            <p class="top-line">2026-2027 оны хичээлийн жилийн сурагчдын ирцийн тэмдэглэл</p>
+            <h1>1-р ээлж</h1>
+            <p class="sub-line">2025 оны ...... сарын ......-ны өдөр</p>
+            <p id="login-info" class="login-info"></p>
+
+            <div class="export-toolbar" role="toolbar" aria-label="Экспортын товчнууд">
+  <button type="button" class="toolbar-btn" data-action="excel">📥 Excel</button>
+  <button type="button" class="toolbar-btn" data-action="pdf">🖨 PDF</button>
+  <button type="button" class="toolbar-btn" data-action="exit">🧹 Цэвэрлэх</button>
+</div>
+
+        </header>
+
+        <div class="floating-error" aria-live="assertive"></div>
+
+        <table class="attendance-table">
+            <thead>
+                <tr>
+                    
+                    <th rowspan="2">№</th>
+                    <th rowspan="2">Анги №</th>
+                    <th rowspan="2">Анги бүлэг</th>
+                    <th rowspan="2">Ирэх сурагчийн тоо</th>
+                    <th rowspan="2">Ирсэн сурагчийн тоо</th>
+                    
+                    
+                    <th colspan="3">Үүнээс</th>
+                    <th rowspan="2">Тасалсан сурагчийн нэр</th>
+                    <th rowspan="2">Чөлөө авсан сурагчийн нэр</th>
+                    
+                </tr>
+                <tr>
+                    <th>Ө</th>
+                    <th>Ч</th>
+                    <th>Т</th>
+                    
+                    
+                   
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>№102</td>
+                    <td>10-б</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>№103</td>
+                    <td>12-д</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>№104</td>
+                    <td>11-а</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>№105</td>
+                    <td>12-а</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>№107</td>
+                    <td>11-б</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>№108</td>
+                    <td>9-г</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>№109</td>
+                    <td>12-г</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>№110</td>
+                    <td>10-д</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>№202</td>
+                    <td>11-в</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>№203</td>
+                    <td>9-г</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>№204</td>
+                    <td>10-е</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>№205</td>
+                    <td>11-г</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>№207</td>
+                    <td>12-е</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>№208</td>
+                    <td>12-б</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>№209</td>
+                    <td>10-г</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>16</td>
+                    <td>№210</td>
+                    <td>12-в</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>17</td>
+                    <td>№216</td>
+                    <td>10-а</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>18</td>
+                    <td>№217</td>
+                    <td>11-д</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>19</td>
+                    <td>№224</td>
+                    <td>9-а</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+                <tr>
+                    <td>20</td>
+                    <td>№226</td>
+                    <td>10-в</td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="number-input" type="number" min="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                    <td><input class="name-input" type="text" placeholder=""></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="total-label">1-р ээлж нийт:</td>
+                    <td><input id="incoming-total" class="total-input" type="number" min="0" readonly aria-live="polite"></td>
+                    <td><input id="present-total" class="total-input" type="number" min="0" readonly aria-live="polite"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                    <td class="name-total" aria-label="Тасалсан сурагчдын нийлбэр"></td>
+                    <td class="name-total" aria-label="Чөлөө авсан сурагчдын нийлбэр"></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <section class="elective-section">
+            <div class="elective-floating-error" aria-live="assertive"></div>
+            <p class="table-title">Сонгон судлах хичээл болон багшийн нэр</p>
+            <table class="elective-table">
+                <thead>
+                    <tr>
+                        
+                        <th rowspan="2">Сонгон судлах хичээл</th>
+                        <th rowspan="2">Ирэх сурагчийн тоо</th>
+                        <th rowspan="2">Ирсэн сурагчийн тоо</th>
+                        
+                        
+                        <th colspan="3">Үүнээс</th>
+                        <th rowspan="2">Багшийн нэр, анги бүлэг</th>
+                        
+                    </tr>
+                    <tr>
+                        <th>Ө</th>
+                        <th>Ч</th>
+                        <th>Т</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                    </tr>
+                    <tr>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                    </tr>
+                    <tr>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                    </tr>
+                    <tr>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="number-input" type="number" min="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="spinner-input" type="number" min="0" value="0"></td>
+                        <td><input class="name-input" type="text" placeholder=""></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="late-students-section" aria-labelledby="late-students-title">
+            <p id="late-students-title" class="late-students-label">Хоцорсон сурагчийн нэрс:</p>
+            <table class="late-students-table">
+                <caption>08:00-с хойш хоцорсон сурагчдын нэр</caption>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Анги<br>бүлэг</th>
+                        <th>Сурагчийн нэр</th>
+                        <th>Эцэг эх асран<br>хамгаалагчийн утас</th>
+                        <th>Гэрийн хаяг</th>
+                        <th>Хоцорсон давталт</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td><input aria-label="1-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="1-р сурагчийн нэр" type="text"></td><td><input aria-label="1-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="1-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="1-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>2</td><td><input aria-label="2-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="2-р сурагчийн нэр" type="text"></td><td><input aria-label="2-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="2-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="2-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>3</td><td><input aria-label="3-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="3-р сурагчийн нэр" type="text"></td><td><input aria-label="3-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="3-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="3-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>4</td><td><input aria-label="4-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="4-р сурагчийн нэр" type="text"></td><td><input aria-label="4-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="4-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="4-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>5</td><td><input aria-label="5-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="5-р сурагчийн нэр" type="text"></td><td><input aria-label="5-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="5-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="5-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>6</td><td><input aria-label="6-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="6-р сурагчийн нэр" type="text"></td><td><input aria-label="6-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="6-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="6-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>7</td><td><input aria-label="7-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="7-р сурагчийн нэр" type="text"></td><td><input aria-label="7-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="7-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="7-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>8</td><td><input aria-label="8-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="8-р сурагчийн нэр" type="text"></td><td><input aria-label="8-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="8-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="8-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>9</td><td><input aria-label="9-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="9-р сурагчийн нэр" type="text"></td><td><input aria-label="9-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="9-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="9-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>10</td><td><input aria-label="10-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="10-р сурагчийн нэр" type="text"></td><td><input aria-label="10-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="10-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="10-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>11</td><td><input aria-label="11-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="11-р сурагчийн нэр" type="text"></td><td><input aria-label="11-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="11-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="11-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>12</td><td><input aria-label="12-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="12-р сурагчийн нэр" type="text"></td><td><input aria-label="12-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="12-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="12-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>13</td><td><input aria-label="13-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="13-р сурагчийн нэр" type="text"></td><td><input aria-label="13-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="13-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="13-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>14</td><td><input aria-label="14-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="14-р сурагчийн нэр" type="text"></td><td><input aria-label="14-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="14-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="14-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>15</td><td><input aria-label="15-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="15-р сурагчийн нэр" type="text"></td><td><input aria-label="15-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="15-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="15-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                    <tr><td>16</td><td><input aria-label="16-р сурагчийн анги бүлэг" type="text"></td><td><input aria-label="16-р сурагчийн нэр" type="text"></td><td><input aria-label="16-р сурагчийн асран хамгаалагчийн утас" type="tel"></td><td><input aria-label="16-р сурагчийн гэрийн хаяг" type="text"></td><td><input aria-label="16-р сурагчийн хоцорсон давталт" type="number" min="0"></td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="duty-teacher-notes" aria-labelledby="duty-teacher-notes-title">
+            <label id="duty-teacher-notes-title" for="duty-teacher-notes">Жижүүр багшийн тэмдэглэл:</label>
+            <textarea id="duty-teacher-notes" rows="4" aria-label="Жижүүр багшийн тэмдэглэл"></textarea>
+        </section>
+    </div>
+    <script src="js/attendance.js" defer></script>
+</body>
+</html>
