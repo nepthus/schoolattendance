@@ -492,34 +492,48 @@ function exportExcel() {
 
   const title = "2026-2027 оны хичээлийн жилийн сурагчдын ирцийн тэмдэглэл";
   const headers = ["№","Анги №","Анги бүлэг","Ирэх","Ирсэн","Ө","Ч","Т","Тасалсан","Чөлөө"];
-  const shift = document.body.dataset.shift || "1";
-  const data = [[title], [`${shift}-р ээлж`], [], headers];
+  const currentShift = document.body.dataset.shift || "1";
+  const otherShift = currentShift === "1" ? "2" : "1";
+  const currentDraft = captureAttendanceDraft();
+  let otherDraft = null;
+  try {
+    otherDraft = JSON.parse(localStorage.getItem(`attendance-draft-v${otherShift}`) || "null");
+  } catch (error) {
+    console.warn(`Shift ${otherShift} attendance draft could not be read.`, error);
+  }
 
-  document.querySelectorAll(".attendance-table tbody tr").forEach(row => {
-    const tds = row.querySelectorAll("td");
-    data.push([
-      tds[0].innerText.trim(),
-      tds[1].innerText.trim(),
-      tds[2].innerText.trim(),
-      tds[3].querySelector("input").value,
-      tds[4].querySelector("input").value,
-      tds[5].querySelector("input").value,
-      tds[6].querySelector("input").value,
-      tds[7].querySelector("input").value,
-      displaySelectedNames(tds[8]),
-      displaySelectedNames(tds[9])
-    ]);
+  const data = [[title]];
+  ["1", "2"].forEach(shift => {
+    const draft = shift === currentShift ? currentDraft : otherDraft;
+    data.push([`${shift}-р ээлж`], [], headers);
+    const rows = document.querySelectorAll(".attendance-table tbody tr");
+    let incomingTotal = 0;
+    let presentTotal = 0;
+    rows.forEach((row, index) => {
+      const cells = row.querySelectorAll("td");
+      const saved = draft?.attendance?.[index];
+      const values = saved?.values || [];
+      const incoming = shift === currentShift ? cells[3].querySelector("input").value : (values[0] || "");
+      const present = shift === currentShift ? cells[4].querySelector("input").value : (values[1] || "");
+      incomingTotal += Number(incoming) || 0;
+      presentTotal += Number(present) || 0;
+      data.push([
+        cells[0].innerText.trim(), cells[1].innerText.trim(), cells[2].innerText.trim(),
+        incoming, present,
+        ...(shift === currentShift
+          ? [cells[5].querySelector("input").value, cells[6].querySelector("input").value, cells[7].querySelector("input").value]
+          : [values[2] || "", values[3] || "", values[4] || ""]),
+        shift === currentShift ? displaySelectedNames(cells[8]) : (saved?.absentNames || ""),
+        shift === currentShift ? displaySelectedNames(cells[9]) : (saved?.leaveNames || "")
+      ]);
+    });
+    data.push(["", "", "НИЙТ", incomingTotal, presentTotal], []);
   });
-
-  data.push(["","","НИЙТ",
-    document.getElementById("incoming-total").value,
-    document.getElementById("present-total").value
-  ]);
 
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(data);
   formatExportSheet(ws, data.length, 10, "A4:J4", [6, 12, 12, 9, 9, 7, 7, 7, 32, 32]);
-  ws["!merges"] = [XLSX.utils.decode_range("A1:J1"), XLSX.utils.decode_range("A2:J2")];
+  ws["!merges"] = [XLSX.utils.decode_range("A1:J1")];
   XLSX.utils.book_append_sheet(wb, ws, "Ирц");
 
   const electiveData = [["Сонгон судлах хичээлийн ирц"], [],
@@ -558,7 +572,17 @@ function exportExcel() {
 
   const exportDate = new Date();
   const dateStamp = exportDate.toISOString().slice(0, 10);
-  XLSX.writeFile(wb, `irts_${shift}_${dateStamp}.xlsx`);
+  XLSX.writeFile(wb, `irts_both_shifts_${dateStamp}.xlsx`);
+}
+
+function captureAttendanceDraft() {
+  return {
+    attendance: [...document.querySelectorAll(".attendance-table tbody tr")].map(row => ({
+      values: [3, 4, 5, 6, 7].map(index => row.cells[index]?.querySelector("input")?.value || ""),
+      absentNames: selectedNames(row.cells[8]),
+      leaveNames: selectedNames(row.cells[9])
+    }))
+  };
 }
 
 function exportCellValue(cell) {
