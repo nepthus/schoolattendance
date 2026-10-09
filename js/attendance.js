@@ -494,7 +494,8 @@ function exportExcel() {
   const headers = ["№","Анги №","Анги бүлэг","Ирэх","Ирсэн","Ө","Ч","Т","Тасалсан","Чөлөө"];
   const currentShift = document.body.dataset.shift || "1";
   const otherShift = currentShift === "1" ? "2" : "1";
-  const currentDraft = captureAttendanceDraft();
+  saveDraft();
+  const currentDraft = readAttendanceDraft(currentShift);
   let otherDraft = null;
   try {
     otherDraft = JSON.parse(localStorage.getItem(`attendance-draft-v${otherShift}`) || "null");
@@ -536,30 +537,52 @@ function exportExcel() {
   ws["!merges"] = [XLSX.utils.decode_range("A1:J1")];
   XLSX.utils.book_append_sheet(wb, ws, "Ирц");
 
-  const electiveData = [["Сонгон судлах хичээлийн ирц"], [],
-    ["Хичээл / багш", "Ирэх", "Ирсэн", "Ө", "Ч", "Т", "Тасалсан сурагч"]];
-  document.querySelectorAll(".elective-table tbody tr").forEach(row => {
-    const cells = row.querySelectorAll("td");
-    electiveData.push([...cells].map(cell => exportCellValue(cell)));
+  const electiveData = [["Сонгон судлах хичээлийн ирц"], []];
+  ["1", "2"].forEach(shift => {
+    const draft = shift === currentShift ? currentDraft : otherDraft;
+    electiveData.push([`${shift}-р ээлж`],
+      ["Хичээл", "Ирэх", "Ирсэн", "Ө", "Ч", "Т", "Багшийн нэр, анги бүлэг"]);
+    (document.querySelectorAll(".elective-table tbody tr")).forEach((row, index) => {
+      const cells = row.querySelectorAll("td");
+      const savedValues = draft?.elective?.[index] || [];
+      electiveData.push(shift === currentShift
+        ? [...cells].map(cell => exportCellValue(cell))
+        : savedValues);
+    });
+    electiveData.push([]);
   });
   const electiveWs = XLSX.utils.aoa_to_sheet(electiveData);
-  formatExportSheet(electiveWs, electiveData.length, 7, "A3:G3", [28, 9, 9, 7, 7, 7, 34]);
+  formatExportSheet(electiveWs, electiveData.length, 7, "A4:G4", [28, 9, 9, 7, 7, 7, 34]);
   electiveWs["!merges"] = [XLSX.utils.decode_range("A1:G1")];
   XLSX.utils.book_append_sheet(wb, electiveWs, "Сонгон хичээл");
 
-  const lateData = [["Хоцорсон сурагчдын бүртгэл"], [],
-    ["№", "Анги бүлэг", "Сурагчийн нэр", "Асран хамгаалагчийн утас", "Гэрийн хаяг", "Хоцорсон давталт"]];
-  document.querySelectorAll(".late-students-table tbody tr").forEach(row => {
-    lateData.push([...row.querySelectorAll("td")].map(cell => exportCellValue(cell)));
+  const lateData = [["Хоцорсон сурагчдын бүртгэл"], []];
+  ["1", "2"].forEach(shift => {
+    const draft = shift === currentShift ? currentDraft : otherDraft;
+    lateData.push([`${shift}-р ээлж`],
+      ["№", "Анги бүлэг", "Сурагчийн нэр", "Асран хамгаалагчийн утас", "Гэрийн хаяг", "Хоцорсон давталт"]);
+    document.querySelectorAll(".late-students-table tbody tr").forEach((row, index) => {
+      const cells = row.querySelectorAll("td");
+      const saved = draft?.late?.[index];
+      const values = saved?.values || [];
+      lateData.push(shift === currentShift
+        ? [...cells].map(cell => exportCellValue(cell))
+        : [cells[0].innerText.trim(), values[0] || "", saved?.studentNames || "", values[1] || "", values[2] || "", values[3] || ""]);
+    });
+    lateData.push([]);
   });
   const lateWs = XLSX.utils.aoa_to_sheet(lateData);
-  formatExportSheet(lateWs, lateData.length, 6, "A3:F3", [6, 12, 25, 23, 30, 18]);
+  formatExportSheet(lateWs, lateData.length, 6, "A4:F4", [6, 12, 25, 23, 30, 18]);
   lateWs["!merges"] = [XLSX.utils.decode_range("A1:F1")];
   XLSX.utils.book_append_sheet(wb, lateWs, "Хоцорсон");
 
   const dutyTeacherNotes = document.getElementById("duty-teacher-notes");
   if (dutyTeacherNotes) {
-    const notesData = [["Жижүүр багшийн тэмдэглэл"], [dutyTeacherNotes.value]];
+    const notesData = [["Жижүүр багшийн тэмдэглэл"]];
+    ["1", "2"].forEach(shift => {
+      const draft = shift === currentShift ? currentDraft : otherDraft;
+      notesData.push([`${shift}-р ээлж`], [draft?.dutyTeacherNotes || ""], []);
+    });
     const notesWs = XLSX.utils.aoa_to_sheet(notesData);
     notesWs["!cols"] = [{ wch: 100 }];
     notesWs["!rows"] = [{ hpt: 22 }, { hpt: 100 }];
@@ -575,14 +598,13 @@ function exportExcel() {
   XLSX.writeFile(wb, `irts_both_shifts_${dateStamp}.xlsx`);
 }
 
-function captureAttendanceDraft() {
-  return {
-    attendance: [...document.querySelectorAll(".attendance-table tbody tr")].map(row => ({
-      values: [3, 4, 5, 6, 7].map(index => row.cells[index]?.querySelector("input")?.value || ""),
-      absentNames: selectedNames(row.cells[8]),
-      leaveNames: selectedNames(row.cells[9])
-    }))
-  };
+function readAttendanceDraft(shift) {
+  try {
+    return JSON.parse(localStorage.getItem(`attendance-draft-v${shift}`) || "null");
+  } catch (error) {
+    console.warn(`Shift ${shift} attendance draft could not be read.`, error);
+    return null;
+  }
 }
 
 function exportCellValue(cell) {
