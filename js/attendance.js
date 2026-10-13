@@ -9,7 +9,7 @@
 
 const PIN_CODE = "1234";
 const PIN_STORAGE_KEY = "attendance-web-pin-verified";
-const PIN_TTL_MS = 24 * 60 * 60 * 1000;
+const PIN_TTL_MS = 12 * 60 * 60 * 1000;
 
 function hasValidPin() {
   const saved = Number(localStorage.getItem(PIN_STORAGE_KEY) || 0);
