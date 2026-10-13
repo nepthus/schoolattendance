@@ -47,7 +47,7 @@ function doPost(event) {
     MailApp.sendEmail({
       to: RECIPIENT_EMAIL,
       subject: `${shift}-р ээлжийн ирцийн тайлан - ${reportDate}`,
-      body: `${shift}-р ээлжийн ирцийн Excel тайланг хавсаргав. Огноо: ${reportDate}`,
+      body: "",
       attachments: [attachment]
     });
 
