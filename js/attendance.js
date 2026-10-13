@@ -10,7 +10,6 @@
 /* ================= DOM READY ================= */
 document.addEventListener("DOMContentLoaded", async () => {
   updateCurrentDate();
-  updateSenderInfo();
   await loadClassRosters();
   initTotals();
   initValidation();
@@ -44,7 +43,6 @@ function updateCurrentDate() {
 /* ================= REFRESH-SAFE DRAFT ================= */
 const DRAFT_STORAGE_KEY = `attendance-draft-v${document.body.dataset.shift || "1"}`;
 const GMAIL_SCRIPT_URL = "PASTE_DEPLOYED_APPS_SCRIPT_WEB_APP_URL_HERE";
-const SENDER_STORAGE_KEY = "attendance-sender-email";
 
 function formControlValues(row) {
   return [...row.querySelectorAll("input, select, textarea")]
@@ -455,43 +453,9 @@ function initExportToolbar() {
 
     if (action === "excel")  exportExcel();
     if (action === "gmail")  exportToGmail();
-    if (action === "sender") setLocalSender();
     if (action === "pdf")    exportPDF();
     if (action === "exit")   resetInputs(); // 🧹 цэвэрлэх
   });
-}
-
-function readLocalSender() {
-  try {
-    return localStorage.getItem(SENDER_STORAGE_KEY) || "";
-  } catch (error) {
-    return "";
-  }
-}
-
-function updateSenderInfo() {
-  const info = document.getElementById("login-info");
-  if (!info) return;
-  const sender = readLocalSender();
-  info.textContent = sender ? `Илгээгч: ${sender}` : "Илгээгч тохируулаагүй";
-}
-
-function setLocalSender() {
-  const sender = prompt("Энэ төхөөрөмж дээр илгээх Google хаяг:", readLocalSender());
-  if (sender === null) return;
-
-  const normalizedSender = sender.trim().toLowerCase();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedSender)) {
-    alert("Зөв Google хаяг оруулна уу.");
-    return;
-  }
-
-  try {
-    localStorage.setItem(SENDER_STORAGE_KEY, normalizedSender);
-    updateSenderInfo();
-  } catch (error) {
-    alert("Илгээгчийн тохиргоог энэ төхөөрөмжид хадгалж чадсангүй.");
-  }
 }
 
 /* ================= RESET ================= */
@@ -605,12 +569,6 @@ function exportToGmail() {
     return;
   }
 
-  const senderEmail = readLocalSender();
-  if (!senderEmail) {
-    alert("Эхлээд энэ төхөөрөмжийн илгээгчийн Google хаягийг тохируулна уу.");
-    return;
-  }
-
   const workbook = exportExcel(false);
   if (!workbook) return;
   const shift = document.body.dataset.shift || "1";
@@ -624,7 +582,6 @@ function exportToGmail() {
   payload.type = "hidden";
   payload.name = "payload";
   payload.value = JSON.stringify({
-    senderEmail,
     shift,
     reportDate: dateStamp,
     fileName: workbook.fileName,

@@ -10,9 +10,8 @@ function doPost(event) {
 
     const payload = JSON.parse(event.parameter.payload || "{}");
     const sender = Session.getActiveUser().getEmail().trim().toLowerCase();
-    const requestedSender = String(payload.senderEmail || "").trim().toLowerCase();
-    if (!sender || !requestedSender || sender !== requestedSender) {
-      throw new Error("Sign in with the Google account selected as this device's sender.");
+    if (!sender) {
+      throw new Error("Sign in with an authorized Google account to send attendance reports.");
     }
 
     const shift = String(payload.shift || "");
