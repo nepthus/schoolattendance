@@ -502,6 +502,29 @@ tfoot td {
   filter: brightness(0.95);
 }
 
+@media (max-width: 1024px) {
+    body {
+        padding: 10px;
+    }
+
+    .sheet {
+        width: 100%;
+        max-width: none;
+        padding: 16px 12px 24px;
+    }
+
+    .sheet table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .export-toolbar {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
 /* Print / PDF үед toolbar харагдахгүй */
 @media print {
   @page {
