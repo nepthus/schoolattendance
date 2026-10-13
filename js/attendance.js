@@ -571,7 +571,7 @@ function exportToGmail() {
   composeUrl.searchParams.set("view", "cm");
   composeUrl.searchParams.set("fs", "1");
   composeUrl.searchParams.set("to", "nepalt12345@gmail.com");
-  composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан - ${dateStamp}`);
+  composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан Жижүүр багш "___" - ${dateStamp}`);
   composeUrl.searchParams.set("body", "Сайн байна уу,\n\nИрцийн тайланг хавсаргалаа.\n\nХүндэтгэсэн,");
   window.open(composeUrl.toString(), "_blank", "noopener");
 }
