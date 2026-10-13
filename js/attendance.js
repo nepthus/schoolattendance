@@ -9,9 +9,24 @@
 
 const PIN_CODE = "1234";
 const PIN_STORAGE_KEY = "attendance-web-pin-verified";
+const PIN_TTL_MS = 24 * 60 * 60 * 1000;
+
+function hasValidPin() {
+  const saved = Number(localStorage.getItem(PIN_STORAGE_KEY) || 0);
+  if (!saved) return false;
+
+  const now = Date.now();
+  if (now - saved > PIN_TTL_MS) {
+    localStorage.removeItem(PIN_STORAGE_KEY);
+    sessionStorage.removeItem(PIN_STORAGE_KEY);
+    return false;
+  }
+
+  return true;
+}
 
 function initPinGate() {
-  const alreadyVerified = sessionStorage.getItem(PIN_STORAGE_KEY) === "true" || localStorage.getItem(PIN_STORAGE_KEY) === "true";
+  const alreadyVerified = hasValidPin() || sessionStorage.getItem(PIN_STORAGE_KEY) === "true";
   if (alreadyVerified) return;
 
   const overlay = document.createElement("div");
@@ -82,8 +97,9 @@ function initPinGate() {
     const entered = input.value.trim();
 
     if (entered === PIN_CODE) {
+      const timestamp = Date.now();
       sessionStorage.setItem(PIN_STORAGE_KEY, "true");
-      localStorage.setItem(PIN_STORAGE_KEY, "true");
+      localStorage.setItem(PIN_STORAGE_KEY, String(timestamp));
       overlay.remove();
       return;
     }
@@ -664,11 +680,12 @@ function exportToGmail() {
   const composeUrl = new URL("https://mail.google.com/mail/");
   composeUrl.searchParams.set("view", "cm");
   composeUrl.searchParams.set("fs", "1");
-  composeUrl.searchParams.set("to", "t.suwdaa8306@gmail.com, sundui920@gmail.com");
+  composeUrl.searchParams.set("to", "t.suwdaa8306@gmail.com");
+  composeUrl.searchParams.set("cc", "sundui920@gmail.com");
   composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан Жижүүр багш  - ${dateStamp}`);
   composeUrl.searchParams.set(
     "body",
-    `Сайн байна уу,\n\nИрцийн тайланг хавсаргалаа.\n\nХүндэтгэсэн,`
+    `Сайн байна уу,\n\nИрцийн тайланг хавсаргалаа.\n`
   );
   window.open(composeUrl.toString(), "_blank", "noopener");
 }
