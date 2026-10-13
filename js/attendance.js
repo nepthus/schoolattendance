@@ -297,7 +297,7 @@ function createNameMultiSelect(cell, selected = [], classGroup = "", emptyLabel 
   if (!students.length) {
     const notice = document.createElement("span");
     notice.className = "name-multiselect__empty";
-    notice.textContent = "Сурагчийн жагсаалт алга";
+    notice.textContent = emptyLabel;
     menu.appendChild(notice);
   }
 
