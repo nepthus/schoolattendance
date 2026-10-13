@@ -7,8 +7,102 @@
  * =====================================================
  */
 
+const PIN_CODE = "1234";
+const PIN_STORAGE_KEY = "attendance-web-pin-verified";
+
+function initPinGate() {
+  const alreadyVerified = sessionStorage.getItem(PIN_STORAGE_KEY) === "true" || localStorage.getItem(PIN_STORAGE_KEY) === "true";
+  if (alreadyVerified) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "attendance-pin-gate";
+  overlay.style.position = "fixed";
+  overlay.style.inset = "0";
+  overlay.style.background = "rgba(10, 22, 38, 0.78)";
+  overlay.style.display = "flex";
+  overlay.style.alignItems = "center";
+  overlay.style.justifyContent = "center";
+  overlay.style.zIndex = "99999";
+  overlay.style.backdropFilter = "blur(2px)";
+
+  const panel = document.createElement("div");
+  panel.style.width = "min(92vw, 360px)";
+  panel.style.background = "#ffffff";
+  panel.style.borderRadius = "14px";
+  panel.style.boxShadow = "0 18px 45px rgba(0, 0, 0, 0.25)";
+  panel.style.padding = "24px 20px";
+  panel.style.textAlign = "center";
+
+  const title = document.createElement("h2");
+  title.textContent = "Нэвтрэх";
+  title.style.margin = "0 0 10px";
+  title.style.color = "#123";
+
+  const subtitle = document.createElement("p");
+  subtitle.textContent = "Цахим ирцийн системд нэвтрэхийн тулд PIN код оруулна уу.";
+  subtitle.style.margin = "0 0 16px";
+  subtitle.style.color = "#445";
+  subtitle.style.fontSize = "14px";
+
+  const form = document.createElement("form");
+  form.style.display = "grid";
+  form.style.gap = "12px";
+
+  const input = document.createElement("input");
+  input.type = "password";
+  input.placeholder = "PIN код";
+  input.autocomplete = "off";
+  input.maxLength = 4;
+  input.style.padding = "12px 14px";
+  input.style.fontSize = "18px";
+  input.style.textAlign = "center";
+  input.style.border = "1px solid #b7c2d1";
+  input.style.borderRadius = "10px";
+  input.style.outline = "none";
+
+  const error = document.createElement("div");
+  error.style.color = "#b00020";
+  error.style.minHeight = "18px";
+  error.style.fontSize = "13px";
+  error.style.fontWeight = "600";
+
+  const button = document.createElement("button");
+  button.type = "submit";
+  button.textContent = "Нэвтрэх";
+  button.style.padding = "12px 16px";
+  button.style.border = "none";
+  button.style.borderRadius = "10px";
+  button.style.background = "#0a5db8";
+  button.style.color = "#fff";
+  button.style.fontWeight = "700";
+  button.style.cursor = "pointer";
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const entered = input.value.trim();
+
+    if (entered === PIN_CODE) {
+      sessionStorage.setItem(PIN_STORAGE_KEY, "true");
+      localStorage.setItem(PIN_STORAGE_KEY, "true");
+      overlay.remove();
+      return;
+    }
+
+    error.textContent = "Буруу PIN код. Дахин оролдоно уу.";
+    input.value = "";
+    input.focus();
+  });
+
+  form.append(input, error, button);
+  panel.append(title, subtitle, form);
+  overlay.appendChild(panel);
+  document.body.appendChild(overlay);
+  input.focus();
+}
+
 /* ================= DOM READY ================= */
 document.addEventListener("DOMContentLoaded", async () => {
+  initPinGate();
   updateCurrentDate();
   await loadClassRosters();
   initTotals();
@@ -570,9 +664,12 @@ function exportToGmail() {
   const composeUrl = new URL("https://mail.google.com/mail/");
   composeUrl.searchParams.set("view", "cm");
   composeUrl.searchParams.set("fs", "1");
-  composeUrl.searchParams.set("to", "t.suwdaa8306@gmail.com");
-  composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан Жижүүр багш "___" - ${dateStamp}`);
-  composeUrl.searchParams.set("body", "Сайн байна уу,\n\nИрцийн тайланг хавсаргалаа.\n\nХүндэтгэсэн,");
+  composeUrl.searchParams.set("to", "t.suwdaa8306@gmail.com, sundui920@gmail.com");
+  composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан Жижүүр багш  - ${dateStamp}`);
+  composeUrl.searchParams.set(
+    "body",
+    `Сайн байна уу,\n\nИрцийн тайланг хавсаргалаа.\n\nХүндэтгэсэн,`
+  );
   window.open(composeUrl.toString(), "_blank", "noopener");
 }
 

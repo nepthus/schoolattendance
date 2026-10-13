@@ -45,7 +45,7 @@ function doPost(event) {
     MailApp.sendEmail({
       to: RECIPIENT_EMAIL,
       subject: `${shift}-р ээлжийн ирцийн тайлан - ${reportDate}`,
-      body: "",
+      body: `Сайн байна уу,\n\n${shift}-р ээлжийн ирцийн тайланг хавсаргалаа.\n\nХүлээн авна уу.\n\nХүндэтгэсэн,`,
       attachments: [attachment]
     });
 
