@@ -682,7 +682,7 @@ function exportToGmail() {
   composeUrl.searchParams.set("fs", "1");
   composeUrl.searchParams.set("to", "t.suwdaa8306@gmail.com");
   composeUrl.searchParams.set("cc", "sundui920@gmail.com");
-  composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан Жижүүр багш  - ${dateStamp}`);
+  composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан Жижүүр багш '  ' - ${dateStamp}`);
   composeUrl.searchParams.set(
     "body",
     `Сайн байна уу,\n\nИрцийн тайланг хавсаргалаа.\n`
