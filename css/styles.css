@@ -21,11 +21,23 @@ body {
 }
 
 .sheet-header {
+    position: relative;
     text-align: center;
     margin-bottom: 16px;
     font-family: 'Playfair Display', 'Georgia', serif;
     letter-spacing: 0.04em;
     color: #202020;
+}
+
+.header-logo {
+    position: absolute;
+    left: 18px;
+    top: 6px;
+    width: 92px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 10px;
 }
 
 .shift-toggle {
