@@ -42,6 +42,7 @@ function updateCurrentDate() {
 
 /* ================= REFRESH-SAFE DRAFT ================= */
 const DRAFT_STORAGE_KEY = `attendance-draft-v${document.body.dataset.shift || "1"}`;
+const GMAIL_SCRIPT_URL = "PASTE_DEPLOYED_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 function formControlValues(row) {
   return [...row.querySelectorAll("input, select, textarea")]
@@ -485,7 +486,7 @@ function resetInputs() {
 }
 
 /* ================= EXCEL EXPORT ================= */
-function exportExcel() {
+function exportExcel(download = true) {
   if (typeof XLSX === "undefined") {
     alert("Excel library ачаалагдаагүй байна");
     return false;
@@ -551,43 +552,45 @@ function exportExcel() {
 
   const exportDate = new Date();
   const dateStamp = exportDate.toISOString().slice(0, 10);
-  XLSX.writeFile(wb, `irts_${shift}_${dateStamp}.xlsx`);
-  return true;
+  const fileName = `irts_${shift}_${dateStamp}.xlsx`;
+  if (download) {
+    XLSX.writeFile(wb, fileName);
+    return true;
+  }
+  return {
+    fileName,
+    fileBase64: XLSX.write(wb, { bookType: "xlsx", type: "base64" })
+  };
 }
 
 function exportToGmail() {
-  if (!exportExcel()) return;
+  if (GMAIL_SCRIPT_URL.includes("PASTE_")) {
+    alert("Apps Script deployment URL-ийг js/attendance.js файлд тохируулна уу.");
+    return;
+  }
 
+  const workbook = exportExcel(false);
+  if (!workbook) return;
   const shift = document.body.dataset.shift || "1";
   const dateStamp = new Date().toISOString().slice(0, 10);
-  const subject = `${shift}-р ээлжийн ирцийн тайлан - ${dateStamp}`;
-  const headers = ["№", "Анги №", "Анги бүлэг", "Ирэх", "Ирсэн", "Ө", "Ч", "Т", "Тасалсан", "Чөлөө"];
-  const rows = [...document.querySelectorAll(".attendance-table tbody tr")].map(row => {
-    const cells = row.querySelectorAll("td");
-    return [
-      cells[0].innerText.trim(), cells[1].innerText.trim(), cells[2].innerText.trim(),
-      ...[3, 4, 5, 6, 7].map(index => cells[index].querySelector("input")?.value || "0"),
-      displaySelectedNames(cells[8]), displaySelectedNames(cells[9])
-    ].join(" | ");
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = GMAIL_SCRIPT_URL;
+  form.target = "_blank";
+
+  const payload = document.createElement("input");
+  payload.type = "hidden";
+  payload.name = "payload";
+  payload.value = JSON.stringify({
+    shift,
+    reportDate: dateStamp,
+    fileName: workbook.fileName,
+    fileBase64: workbook.fileBase64
   });
-  const body = [
-    "2026-2027 оны хичээлийн жилийн сурагчдын ирцийн тэмдэглэл",
-    `${shift}-р ээлж | ${dateStamp}`,
-    "",
-    headers.join(" | "),
-    ...rows,
-    "",
-    `Нийт ирэх: ${document.getElementById("incoming-total").value}`,
-    `Нийт ирсэн: ${document.getElementById("present-total").value}`,
-    "",
-    "Excel файлыг мөн татаж авсан. Шаардлагатай бол имэйлд хавсаргана уу."
-  ].join("\n");
-  const composeUrl = new URL("https://mail.google.com/mail/");
-  composeUrl.searchParams.set("view", "cm");
-  composeUrl.searchParams.set("fs", "1");
-  composeUrl.searchParams.set("su", subject);
-  composeUrl.searchParams.set("body", body);
-  window.open(composeUrl.toString(), "_blank", "noopener");
+  form.appendChild(payload);
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
 }
 
 function exportCellValue(cell) {
