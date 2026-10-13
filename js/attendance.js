@@ -451,6 +451,7 @@ function initExportToolbar() {
     const action = btn.dataset.action;
 
     if (action === "excel")  exportExcel();
+    if (action === "gmail")  exportToGmail();
     if (action === "pdf")    exportPDF();
     if (action === "exit")   resetInputs(); // 🧹 цэвэрлэх
   });
@@ -487,7 +488,7 @@ function resetInputs() {
 function exportExcel() {
   if (typeof XLSX === "undefined") {
     alert("Excel library ачаалагдаагүй байна");
-    return;
+    return false;
   }
 
   const title = "2026-2027 оны хичээлийн жилийн сурагчдын ирцийн тэмдэглэл";
@@ -551,6 +552,42 @@ function exportExcel() {
   const exportDate = new Date();
   const dateStamp = exportDate.toISOString().slice(0, 10);
   XLSX.writeFile(wb, `irts_${shift}_${dateStamp}.xlsx`);
+  return true;
+}
+
+function exportToGmail() {
+  if (!exportExcel()) return;
+
+  const shift = document.body.dataset.shift || "1";
+  const dateStamp = new Date().toISOString().slice(0, 10);
+  const subject = `${shift}-р ээлжийн ирцийн тайлан - ${dateStamp}`;
+  const headers = ["№", "Анги №", "Анги бүлэг", "Ирэх", "Ирсэн", "Ө", "Ч", "Т", "Тасалсан", "Чөлөө"];
+  const rows = [...document.querySelectorAll(".attendance-table tbody tr")].map(row => {
+    const cells = row.querySelectorAll("td");
+    return [
+      cells[0].innerText.trim(), cells[1].innerText.trim(), cells[2].innerText.trim(),
+      ...[3, 4, 5, 6, 7].map(index => cells[index].querySelector("input")?.value || "0"),
+      displaySelectedNames(cells[8]), displaySelectedNames(cells[9])
+    ].join(" | ");
+  });
+  const body = [
+    "2026-2027 оны хичээлийн жилийн сурагчдын ирцийн тэмдэглэл",
+    `${shift}-р ээлж | ${dateStamp}`,
+    "",
+    headers.join(" | "),
+    ...rows,
+    "",
+    `Нийт ирэх: ${document.getElementById("incoming-total").value}`,
+    `Нийт ирсэн: ${document.getElementById("present-total").value}`,
+    "",
+    "Excel файлыг мөн татаж авсан. Шаардлагатай бол имэйлд хавсаргана уу."
+  ].join("\n");
+  const composeUrl = new URL("https://mail.google.com/mail/");
+  composeUrl.searchParams.set("view", "cm");
+  composeUrl.searchParams.set("fs", "1");
+  composeUrl.searchParams.set("su", subject);
+  composeUrl.searchParams.set("body", body);
+  window.open(composeUrl.toString(), "_blank", "noopener");
 }
 
 function exportCellValue(cell) {
