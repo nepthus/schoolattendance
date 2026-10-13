@@ -1,5 +1,4 @@
 const RECIPIENT_EMAIL = "nepalt12345@gmail.com";
-const ALLOWED_SENDERS = ["replace-with-authorized-sender@gmail.com"];
 const MAX_DAILY_SENDS = 10;
 const MAX_ATTACHMENT_BASE64_LENGTH = 20 * 1024 * 1024;
 
@@ -9,13 +8,13 @@ function doPost(event) {
   try {
     lock.waitLock(10000);
 
-    const sender = Session.getActiveUser().getEmail().toLowerCase();
-    const allowedSenders = ALLOWED_SENDERS.map(email => email.toLowerCase());
-    if (!sender || !allowedSenders.includes(sender)) {
-      throw new Error("This Google account is not authorized to send attendance reports.");
+    const payload = JSON.parse(event.parameter.payload || "{}");
+    const sender = Session.getActiveUser().getEmail().trim().toLowerCase();
+    const requestedSender = String(payload.senderEmail || "").trim().toLowerCase();
+    if (!sender || !requestedSender || sender !== requestedSender) {
+      throw new Error("Sign in with the Google account selected as this device's sender.");
     }
 
-    const payload = JSON.parse(event.parameter.payload || "{}");
     const shift = String(payload.shift || "");
     const reportDate = String(payload.reportDate || "");
     const fileName = String(payload.fileName || "");
@@ -52,7 +51,7 @@ function doPost(event) {
     });
 
     properties.setProperty(dayKey, String(sentToday + 1));
-    return responseText(`Sent successfully to ${RECIPIENT_EMAIL}.`);
+    return responseText(`Sent successfully from ${sender} to ${RECIPIENT_EMAIL}.`);
   } catch (error) {
     return responseText(`Could not send the attendance workbook: ${error.message || error}`);
   } finally {
