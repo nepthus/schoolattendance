@@ -42,7 +42,6 @@ function updateCurrentDate() {
 
 /* ================= REFRESH-SAFE DRAFT ================= */
 const DRAFT_STORAGE_KEY = `attendance-draft-v${document.body.dataset.shift || "1"}`;
-const GMAIL_SCRIPT_URL = "PASTE_DEPLOYED_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 function formControlValues(row) {
   return [...row.querySelectorAll("input, select, textarea")]
@@ -564,33 +563,17 @@ function exportExcel(download = true) {
 }
 
 function exportToGmail() {
-  if (GMAIL_SCRIPT_URL.includes("PASTE_")) {
-    alert("Apps Script deployment URL-ийг js/attendance.js файлд тохируулна уу.");
-    return;
-  }
+  if (!exportExcel()) return;
 
-  const workbook = exportExcel(false);
-  if (!workbook) return;
   const shift = document.body.dataset.shift || "1";
   const dateStamp = new Date().toISOString().slice(0, 10);
-  const form = document.createElement("form");
-  form.method = "POST";
-  form.action = GMAIL_SCRIPT_URL;
-  form.target = "_blank";
-
-  const payload = document.createElement("input");
-  payload.type = "hidden";
-  payload.name = "payload";
-  payload.value = JSON.stringify({
-    shift,
-    reportDate: dateStamp,
-    fileName: workbook.fileName,
-    fileBase64: workbook.fileBase64
-  });
-  form.appendChild(payload);
-  document.body.appendChild(form);
-  form.submit();
-  form.remove();
+  const composeUrl = new URL("https://mail.google.com/mail/");
+  composeUrl.searchParams.set("view", "cm");
+  composeUrl.searchParams.set("fs", "1");
+  composeUrl.searchParams.set("to", "nepalt12345@gmail.com");
+  composeUrl.searchParams.set("su", `${shift}-р ээлжийн ирцийн тайлан - ${dateStamp}`);
+  composeUrl.searchParams.set("body", "Сайн байна уу,\n\nИрцийн тайланг хавсаргалаа.\n\nХүндэтгэсэн,");
+  window.open(composeUrl.toString(), "_blank", "noopener");
 }
 
 function exportCellValue(cell) {
