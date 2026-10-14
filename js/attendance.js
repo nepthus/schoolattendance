@@ -128,6 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initExportToolbar();
   restoreDraft();
   updateExpectedStudentCounts();
+  initPresentCountControls();
   calculateTotals();
 
   document.addEventListener("input", () => {
@@ -302,6 +303,43 @@ function updateExpectedStudentCounts() {
     const group = normaliseGroupName(row.cells[2]?.textContent);
     const students = CLASS_ROSTERS[group];
     input.value = students ? String(students.length) : "";
+  });
+}
+
+function initPresentCountControls() {
+  document.querySelectorAll(".attendance-table tbody tr").forEach((row, index) => {
+    const cell = row.cells[4];
+    const input = cell?.querySelector("input");
+    if (!cell || !input) return;
+
+    input.step = "1";
+    input.setAttribute("aria-label", `${index + 1}-р ангийн ирсэн сурагчийн тоо`);
+
+    const control = document.createElement("div");
+    control.className = "attendance-count-control";
+
+    const buttons = document.createElement("div");
+    buttons.className = "attendance-count-control__buttons";
+
+    [
+      { label: "Ирсэн сурагчийн тоог нэмэх", symbol: "▲", amount: 1 },
+      { label: "Ирсэн сурагчийн тоог хасах", symbol: "▼", amount: -1 }
+    ].forEach(({ label, symbol, amount }) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "attendance-count-control__button";
+      button.setAttribute("aria-label", label);
+      button.textContent = symbol;
+      button.addEventListener("click", () => {
+        const current = Number.parseInt(input.value, 10) || 0;
+        input.value = String(Math.max(0, current + amount));
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      buttons.appendChild(button);
+    });
+
+    cell.replaceChildren(control);
+    control.append(input, buttons);
   });
 }
 
