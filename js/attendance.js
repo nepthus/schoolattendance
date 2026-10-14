@@ -127,6 +127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initLateStudentDropdowns();
   initExportToolbar();
   restoreDraft();
+  updateExpectedStudentCounts();
   calculateTotals();
 
   document.addEventListener("input", () => {
@@ -290,6 +291,18 @@ function normaliseRosters(rosters) {
     .map(([group, students]) => [group.trim(), [...new Set((students || [])
       .map(name => String(name).trim()).filter(Boolean))]])
     .filter(([group, students]) => group && students.length));
+}
+
+function updateExpectedStudentCounts() {
+  document.querySelectorAll(".attendance-table tbody tr").forEach(row => {
+    const input = row.cells[3]?.querySelector("input");
+    if (!input) return;
+
+    input.readOnly = true;
+    const group = normaliseGroupName(row.cells[2]?.textContent);
+    const students = CLASS_ROSTERS[group];
+    input.value = students ? String(students.length) : "";
+  });
 }
 
 async function readFallbackRosters() {
@@ -591,6 +604,7 @@ function resetInputs() {
 
   document.querySelectorAll(".name-multiselect").forEach(updateNameMultiSelect);
 
+  updateExpectedStudentCounts();
   calculateTotals();
 }
 

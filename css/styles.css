@@ -53,7 +53,7 @@ body {
     border-radius: 10px;
     background: #fff;
     color: #202020;
-    font: 600 1.1rem "Segoe UI", Arial, sans-serif;
+    font: 500 1.1rem "Segoe UI", Arial, sans-serif;
     letter-spacing: 0;
     text-decoration: none;
 }
@@ -70,7 +70,7 @@ body {
     background: #fff3f3;
     color: #a10d0d;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.2;
     text-align: right;
     border-radius: 4px;
@@ -90,7 +90,7 @@ body {
 .sheet-header h1 {
     margin: 6px 0 2px;
     font-size: 2rem;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .sub-line {
@@ -112,7 +112,7 @@ td {
     padding: 6px 8px;
     text-align: center;
     vertical-align: middle;
-    font-weight: 700;
+    font-weight: 400;
 }
 
 th {
@@ -138,7 +138,7 @@ thead tr:nth-child(2) th {
 
 tfoot td {
     background: #f0eeeb;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .attendance-table thead th,
@@ -329,6 +329,7 @@ tfoot td {
 .late-students-label {
     margin: 0 0 5px;
     font-size: 0.9rem;
+    font-weight: 400;
 }
 
 .late-students-table {
@@ -447,7 +448,7 @@ tfoot td {
 
 .total-label {
     text-align: left;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .name-total {
